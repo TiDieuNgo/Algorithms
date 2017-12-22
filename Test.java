@@ -1,6 +1,7 @@
 package LeetCode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -8,64 +9,41 @@ import java.util.Stack;
 
 public class Test {
 
-	public static void main(String[] args){
+	public static void main(String[] args) {
 
-//		String s = "ccbacebabacd";
-//		String p = "abc";
-//		findAnagrams(s, p);
-//		Stack<Integer> ss = new Stack<Integer>();
-//		ss.add(1);
-		
-		System.out.println(4^2^3^3^2);
-		
-	}
+//		List<List<Integer>> lists = null;
+//		lists.size();
+//		for (int i = 0; i < lists.size(); i++) {
+//			lists.get(i).get(0);
+//		}
+		int min = Integer.MAX_VALUE; int iMin = Integer.MAX_VALUE;
+		int min2 = Integer.MAX_VALUE;
+		int max = Integer.MIN_VALUE; int iMax = Integer.MIN_VALUE;
+		int max2 = Integer.MIN_VALUE;
 
-	static int[] findAnagrams(String s, String p){
-		int current = 0;
-		List<Integer> resultList = new ArrayList<>();
-		List<Character> listP = createListP(p);
-
-		if (p.length() > s.length())
-			return null;
-
-		for (int i = 0; i < s.length(); i++) {
-			char test = s.charAt(i);
-			if (listP.contains(test)){
-				listP.remove(1);
-
-				if (listP.size() == 0){
-					resultList.add(current);
-					current++;
-					i = current;
-
-					if(s.length() - i < p.length())
-						break;
-				}
+		int[][] lists = {{4,5},{4,5},{1, 4,6,29}};
+		for (int i = 0; i < lists.length; i++) {
+			if (lists[i][0] <= min) {
+				min = lists[i][0];
+				iMin = i;
 			}
-			else {
-				current++;
-				i = current;
-
-				if(s.length() - i < p.length())
-					break;
-				listP = createListP(p);
+			if (lists[i][lists[i].length -1] >= max) {
+				max = lists[i][lists[i].length -1];
+				iMax = i;
 			}
 		}
 
-		int[] resultArray = new int[resultList.size()];
-		for (int i = 0 ; i < resultList.size(); i++){
-			resultArray[i] = resultList.get(i);
+		for (int i = 0; i < lists.length; i++) {
+			if (lists[i][0] <= min2 && i != iMin)
+				min2 = lists[i][0];
+			if (lists[i][lists[i].length -1] >= max2 && i != iMax)
+				max2 = lists[i][lists[i].length -1];
 		}
 
-		return resultArray;
-	}
-
-	private static List<Character> createListP(String p) {
-		List<Character> list = new ArrayList<>();
-
-		for (int i = 0; i < p.length(); i++)
-			list.add(p.charAt(i));
-
-		return list;
+		if (iMin == iMax) {
+			System.out.println(max - min2 > max2 - min ? max - min2 : max2 - min );
+		}
+		else
+			System.out.println(max - min);
 	}
 }
