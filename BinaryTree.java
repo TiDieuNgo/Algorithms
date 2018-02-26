@@ -1,8 +1,10 @@
 package LeetCode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -108,12 +110,36 @@ class BinaryTree {
 			addAllLeft(st, root.left);
 	}
 
+	private Node lowestCommonAncestor(Node root, Node p, Node q) {
+		if (root == null)
+			return null;
+
+		Node max = p.val > q.val ? p : q;
+		Node min = p.val > q.val ? q : q;
+
+		while (root != null) {
+			if (root.val == min.val || root.val == max.val || root.val >= min.val && root.val <= max.val)
+				return root;
+			if (root.val > min.val)
+				root = root.left;
+			else
+				root = root.right;
+		}
+
+		return root;
+
+	}
+
 	/* Driver program to test above functions */
 	public static void main(String args[]) {
 		BinaryTree tree = new BinaryTree();
 		tree.root = new Node(2);
-		tree.root.left = null;
-		tree.root.right = new Node(3);
+		tree.root.left = new Node(2);
+//		tree.root.left.left = new Node(4);
+//		tree.root.left.right = new Node(3);
+		tree.root.right = new Node(5);
+		tree.root.right.right = new Node(7);
+		tree.root.right.left = new Node(5);
 
 		// System.out.println("Level order traversal of binary tree is ");
 		// tree.printLevelOrder();
@@ -121,29 +147,92 @@ class BinaryTree {
 		// tree.printRoLeRi(tree.root);
 
 		// tree.printGivenLevelUsingQueue(tree.root);
-		//tree.printInOrderUsingStack(tree.root);
+		// tree.printInOrderUsingStack(tree.root);
 
-		tree.lowestCommonAncestor(tree.root, tree.root, tree.root.right);
+		// tree.lowestCommonAncestor(tree.root, tree.root, tree.root.right);
+
+		// System.out.println(tree.sumOfLeftLeaves(tree.root));
+		//System.err.println(tree.isSymmertric(tree.root));
+		//Map<Integer,Integer> map = new HashMap<>();
+		//System.err.println(map.getOrDefault(2, 5));
+		System.out.println(tree.findSeMin(tree.root));
 	}
 
-	private Node lowestCommonAncestor(Node root, Node p, Node q) {
+	private int findSeMin(Node root) {
 		if (root == null)
-            return null;
-        
-		Node max = p.val > q.val ? p : q;
-		Node min = p.val > q.val ? q : q;
-            
-        while (root != null) {
-            if (root.val == min.val || root.val == max.val || root.val >= min.val && root.val <= max.val)
-                return root;
-            if (root.val > min.val)
-                root = root.left;
-            else
-                root = root.right;
+            return -1;
+        int min = Integer.MAX_VALUE;
+        int se = Integer.MAX_VALUE;
+
+        return helper(root, min, se);
+    }
+
+    int helper(Node root, int min, int se) {
+        if (root.val < min) {
+        	int temp = min;
+            min = root.val;
+            se = temp;
         }
-        
-        return root;
-		
+        else if (root.val > min)
+            se = Math.min(root.val, se);
+
+        if (root.left != null)
+            se = helper(root.left, min, se);
+
+        if (root.right != null)
+            se = helper(root.right, min, se);
+
+        return se;
+    }
+
+	private boolean isSymmertric(Node root2) {
+		if (root == null)
+			return true;
+
+		Queue<Node> q = new LinkedList<>();
+		q.add(root.left);
+		q.add(root.right);
+
+		while (!q.isEmpty()) {
+			Node left = q.poll();
+			Node right = q.poll();
+
+			if (left == null && right != null || left != null && right == null)
+				return false;
+			if (left.val != right.val)
+				return false;
+			if (left != null && right != null) {
+				q.add(left.left);
+				q.add(right.right);
+				q.add(left.right);
+				q.add(right.left);
+			}
+
+		}
+
+		return true;
+
+	}
+
+	private int sumOfLeftLeaves(Node root) {
+
+		if (root == null)
+			return 0;
+		if (root.left == null && root.right == null)
+			return 0;
+
+		int sum = 0;
+		if (root.left != null && root.left.left == null && root.left.left == null)
+			sum += root.left.val;
+
+		if (root.right != null && root.right.left != null || root.right != null && root.right.right != null)
+			sum += sumOfLeftLeaves(root.right);
+
+		if (root.left != null && root.left.left != null || root.left != null && root.left.right != null)
+			sum += sumOfLeftLeaves(root.left);
+
+		return sum;
+
 	}
 
 }
