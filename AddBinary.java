@@ -15,7 +15,7 @@ public class AddBinary {
             carry = sum / 2;
         }
         if (carry != 0) sb.append(carry);
-         
+        // test on testGit1 
         System.out.println(sb.reverse().toString());
 	}
 }
