@@ -16,7 +16,7 @@ public class AddBinary {
         }
         if (carry != 0) sb.append(carry);
          // testGit2_v1
-	// testGit2_v2
+	//testGit2_v1_conflit
         System.out.println(sb.reverse().toString());
 	}
 }
